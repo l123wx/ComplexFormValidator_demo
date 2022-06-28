@@ -53,13 +53,13 @@
         </Space>
 
         <div style="text-align:center">
-            <Switch @change="val => (isTheOptionalFormOpened = val as boolean)" />
+            <Switch @change="onOptionalValueSwiperChange" />
 
-            <p v-show="isTheOptionalFormOpened" class="release-message-tip">
+            <p v-show="isOptionalValueShow" class="release-message-tip">
                 {{ ('presale_release_tip') }}
             </p>
 
-            <Collapse :active-key="[isTheOptionalFormOpened ? 'optionalValue' : '']" :bordered="false">
+            <Collapse :active-key="[isOptionalValueShow ? 'optionalValue' : '']" :bordered="false">
                 <Collapse.Item key="optionalValue" :show-expand-icon="false">
                     <Space :size="[100, 0]" align="start">
                         <Form.Item
@@ -93,28 +93,22 @@
 <script setup lang="ts">
     import { Space, Form, Input, Button, Switch, Collapse } from '@arco-design/web-vue'
     import useFormData from './useFormData'
-    import { formTotalValidator, formValidateStatus } from './formTotalValidator'
-    import { computed, ref } from 'vue'
-    import { onSortHeadBlur, onHardHeadBlur, onPreUsdtBlur, onPreBnbBlur, onOptionalValueBlur } from './events'
+    import { formValidateStatus } from './formTotalValidator'
+    import {
+        onSortHeadBlur,
+        onHardHeadBlur,
+        onPreUsdtBlur,
+        onPreBnbBlur,
+        onOptionalValueSwiperChange,
+        onOptionalValueBlur
+    } from './events'
 
     const {
         formData: presell,
-        form
+        form,
+        isOptionalValueShow
     } = useFormData()
 
-    // TODO: refactor
-    const _isTheOptionalFormOpened = ref<boolean>(false)
-    const isTheOptionalFormOpened = computed({
-        get: () => _isTheOptionalFormOpened.value,
-        set(bool) {
-            _isTheOptionalFormOpened.value = bool
-            if (bool) {
-                formTotalValidator.addField('optionalValue', false)
-            } else {
-                formTotalValidator.removeField('optionalValue')
-            }
-        }
-    })
 </script>
 
 <style>

@@ -1,8 +1,10 @@
 // #记录表单数据
 import { reactive, ref } from 'vue'
 
-function useFormData() {
+function useFormData () {
     const form = ref<any>()
+
+    const isOptionalValueShow = ref<boolean>(false)
 
     const formData = reactive({
         // 软顶
@@ -19,7 +21,8 @@ function useFormData() {
 
     return {
         form,
-        formData
+        formData,
+        isOptionalValueShow
     }
 }
 
