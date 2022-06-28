@@ -3,6 +3,7 @@ import { createValidateMethod } from '@/helpers/validate'
 import commonRules from '@/common/validatorRule'
 import useFormData from './useFormData'
 import { toRef } from 'vue'
+import { SchemaRuleType } from 'b-validate/es'
 
 const {
     formData,
@@ -30,133 +31,81 @@ function setFormFieldFail (fieldName: string, message: string) {
     })
 }
 
-// 软顶
-const sortHead = (() => {
-    const [errorFn, passFn] = formTotalValidator.createFieldController('sortHead')
+
+function createValidateFormFieldMethod (fieldName: string, rulesList: SchemaRuleType[]) {
+    const [errorFn, passFn] = formTotalValidator.createFieldController(fieldName)
     return createValidateMethod({
-        target: toRef(formData, 'sortHead'),
-        rulesList: [
-            commonRules.required,
-            commonRules.number,
-            commonRules.bigNumberIsGreaterThanZero,
-            {
-                validator: (value: any, callback: (error?: string) => void) => {
-                    const halfOfHardHead = parseFloat(formData.hardHead || '0') / 2
-                    console.log(formData.hardHead)
-                    if (value < halfOfHardHead) {
-                        return callback('软顶必须 >= 硬顶的一半')
-                        // eslint-disable-next-line
-                    } else if (formData.hardHead && value >= parseFloat(formData.hardHead)) {
-                        return callback('软顶必须 < 硬顶')
-                    }
-                }
-            }
-        ],
+        target: toRef(formData, fieldName),
+        rulesList,
         successCb () {
-            setFormFieldSuccess('sortHead')
+            setFormFieldSuccess(fieldName)
             passFn()
         },
         failCb (message) {
-            setFormFieldFail('sortHead', message)
+            setFormFieldFail(fieldName, message)
             errorFn()
         }
     })
-})()
+}
+
+// 软顶
+const sortHeadValidator = {
+    validator: (value: any, callback: (error?: string) => void) => {
+        const halfOfHardHead = parseFloat(formData.hardHead || '0') / 2
+        console.log(formData.hardHead)
+        if (value < halfOfHardHead) {
+            return callback('软顶必须 >= 硬顶的一半')
+            // eslint-disable-next-line
+        } else if (formData.hardHead && value >= parseFloat(formData.hardHead)) {
+            return callback('软顶必须 < 硬顶')
+        }
+    }
+}
+const sortHead = createValidateFormFieldMethod('sortHead', [
+    commonRules.required,
+    commonRules.number,
+    commonRules.bigNumberIsGreaterThanZero,
+    sortHeadValidator
+])
+
 
 // 硬顶
-const hardHead = (() => {
-    const [errorFn, passFn] = formTotalValidator.createFieldController('hardHead')
-    return createValidateMethod({
-        target: toRef(formData, 'hardHead'),
-        rulesList: [
-            commonRules.required,
-            commonRules.number,
-            commonRules.bigNumberIsGreaterThanZero,
-            {
-                validator: (value: any, callback: (error?: string) => void) => {
-                    const doubleOfSortHead = parseFloat(formData.sortHead || '0') * 2
-                    // eslint-disable-next-line
-                    if (formData.sortHead && value > doubleOfSortHead) {
-                        errorFn()
-                        return callback('硬顶必须 <= 软顶的 2 倍')
-                        // eslint-disable-next-line
-                    } else if (value <= parseFloat(formData.sortHead)) {
-                        errorFn()
-                        return callback('硬顶必须 > 软顶')
-                    }
-                }
-            }
-        ],
-        successCb () {
-            setFormFieldSuccess('hardHead')
-            passFn()
-        },
-        failCb (message) {
-            setFormFieldFail('hardHead', message)
-            errorFn()
+const hardHeadValidator = {
+    validator: (value: any, callback: (error?: string) => void) => {
+        const doubleOfSortHead = parseFloat(formData.sortHead || '0') * 2
+        // eslint-disable-next-line
+        if (formData.sortHead && value > doubleOfSortHead) {
+            return callback('硬顶必须 <= 软顶的 2 倍')
+            // eslint-disable-next-line
+        } else if (value <= parseFloat(formData.sortHead)) {
+            return callback('硬顶必须 > 软顶')
         }
-    })
-})()
+    }
+}
+const hardHead = createValidateFormFieldMethod('hardHead', [
+    commonRules.required,
+    commonRules.number,
+    commonRules.bigNumberIsGreaterThanZero,
+    hardHeadValidator
+])
 
 // 预售Usdt
-const preUsdt = (() => {
-    const [errorFn, passFn] = formTotalValidator.createFieldController('preUsdt')
-    return createValidateMethod({
-        target: toRef(formData, 'preUsdt'),
-        rulesList: [
-            commonRules.required,
-            commonRules.integer
-        ],
-        successCb () {
-            setFormFieldSuccess('preUsdt')
-            passFn()
-        },
-        failCb (message) {
-            setFormFieldFail('preUsdt', message)
-            errorFn()
-        }
-    })
-})()
+const preUsdt = createValidateFormFieldMethod('preUsdt', [
+    commonRules.required,
+    commonRules.integer
+])
 
 // 预售Bnb
-const preBnb = (() => {
-    const [errorFn, passFn] = formTotalValidator.createFieldController('preBnb')
-    return createValidateMethod({
-        target: toRef(formData, 'preBnb'),
-        rulesList: [
-            commonRules.required,
-            commonRules.integer
-        ],
-        successCb () {
-            setFormFieldSuccess('preBnb')
-            passFn()
-        },
-        failCb (message) {
-            setFormFieldFail('preBnb', message)
-            errorFn()
-        }
-    })
-})()
+const preBnb = createValidateFormFieldMethod('preBnb', [
+    commonRules.required,
+    commonRules.integer
+])
 
 // 可选值
-const optionalValue = (() => {
-    const [errorFn, passFn] = formTotalValidator.createFieldController('optionalValue')
-    return createValidateMethod({
-        target: toRef(formData, 'optionalValue'),
-        rulesList: [
-            commonRules.required,
-            commonRules.number
-        ],
-        successCb () {
-            setFormFieldSuccess('optionalValue')
-            passFn()
-        },
-        failCb (message) {
-            setFormFieldFail('optionalValue', message)
-            errorFn()
-        }
-    })
-})()
+const optionalValue = createValidateFormFieldMethod('optionalValue', [
+    commonRules.required,
+    commonRules.number
+])
 
 const validateMethods = {
     sortHead,
