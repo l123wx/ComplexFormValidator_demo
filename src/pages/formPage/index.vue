@@ -92,50 +92,17 @@
 
 <script setup lang="ts">
     import { Space, Form, Input, Button, Switch, Collapse } from '@arco-design/web-vue'
-    import {
-        validateSortHead,
-        validateHardHead,
-        validatePreUsdt,
-        validatePreBnb,
-        validateOptionalValue
-    } from './validateMethods'
     import useFormData from './useFormData'
     import { formTotalValidator, formValidateStatus } from './formTotalValidator'
     import { computed, ref } from 'vue'
+    import { onSortHeadBlur, onHardHeadBlur, onPreUsdtBlur, onPreBnbBlur, onOptionalValueBlur } from './events'
 
     const {
         formData: presell,
         form
     } = useFormData()
 
-    function onSortHeadBlur () {
-        validateSortHead({
-            successCallback: () => {
-                validateHardHead()
-            }
-        })
-    }
-
-    function onHardHeadBlur () {
-        validateHardHead({
-            successCallback: () => {
-                validateSortHead()
-            }
-        })
-    }
-
-    function onPreUsdtBlur() {
-        validatePreUsdt()
-    }
-
-    function onPreBnbBlur() {
-        validatePreBnb()
-    }
-
-    function onOptionalValueBlur() {
-        validateOptionalValue()
-    }
-
+    // TODO: refactor
     const _isTheOptionalFormOpened = ref<boolean>(false)
     const isTheOptionalFormOpened = computed({
         get: () => _isTheOptionalFormOpened.value,

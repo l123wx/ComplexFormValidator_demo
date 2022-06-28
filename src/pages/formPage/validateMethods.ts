@@ -30,8 +30,8 @@ function setFormFieldFail (fieldName: string, message: string) {
     })
 }
 
-// 软顶校验方法
-export const validateSortHead = (() => {
+// 软顶
+const sortHead = (() => {
     const [errorFn, passFn] = formTotalValidator.createFieldController('sortHead')
     return createValidateMethod({
         target: toRef(formData, 'sortHead'),
@@ -63,8 +63,8 @@ export const validateSortHead = (() => {
     })
 })()
 
-// 硬顶校验方法
-export const validateHardHead = (() => {
+// 硬顶
+const hardHead = (() => {
     const [errorFn, passFn] = formTotalValidator.createFieldController('hardHead')
     return createValidateMethod({
         target: toRef(formData, 'hardHead'),
@@ -98,8 +98,8 @@ export const validateHardHead = (() => {
     })
 })()
 
-// 预售Usdt校验方法
-export const validatePreUsdt = (() => {
+// 预售Usdt
+const preUsdt = (() => {
     const [errorFn, passFn] = formTotalValidator.createFieldController('preUsdt')
     return createValidateMethod({
         target: toRef(formData, 'preUsdt'),
@@ -118,8 +118,8 @@ export const validatePreUsdt = (() => {
     })
 })()
 
-// 预售Bnb校验方法
-export const validatePreBnb = (() => {
+// 预售Bnb
+const preBnb = (() => {
     const [errorFn, passFn] = formTotalValidator.createFieldController('preBnb')
     return createValidateMethod({
         target: toRef(formData, 'preBnb'),
@@ -138,8 +138,8 @@ export const validatePreBnb = (() => {
     })
 })()
 
-// 可选值 校验方法
-export const validateOptionalValue = (() => {
+// 可选值
+const optionalValue = (() => {
     const [errorFn, passFn] = formTotalValidator.createFieldController('optionalValue')
     return createValidateMethod({
         target: toRef(formData, 'optionalValue'),
@@ -157,3 +157,13 @@ export const validateOptionalValue = (() => {
         }
     })
 })()
+
+const validateMethods = {
+    sortHead,
+    hardHead,
+    preUsdt,
+    preBnb,
+    optionalValue
+}
+
+export default validateMethods
