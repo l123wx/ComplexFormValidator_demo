@@ -1,6 +1,6 @@
 import { isFunction } from 'lodash-es'
 import { Schema, SchemaType, SchemaRuleType } from 'b-validate/es'
-import { Ref, unref } from 'vue'
+import { unref } from 'vue'
 
 /**
  * 使用 bv 校验器 进行规则校验
@@ -21,7 +21,8 @@ export const validate = (value: string, rules: SchemaRuleType[]): Promise<string
     })
 }
 
-export const createFormValidator: Validate.FormValidator = (_fieldsMap, { success, fail }) => {
+// 创建一个表单的校验器
+export const createFormValidator: Validation.FormValidator = (_fieldsMap, { success, fail }) => {
     const fieldsMap = _fieldsMap
 
     function validate () {
@@ -61,30 +62,24 @@ export const createFormValidator: Validate.FormValidator = (_fieldsMap, { succes
     }
 }
 
-interface ValidatorOptions {
-    target: Ref
-    rulesList: SchemaRuleType[]
-    successCb: SuccessCallback
-    failCb: FailureCallback
-}
-
-type SuccessCallback = () => void
-type FailureCallback = (errorMessage: string) => void
-
 // 创建一个校验的函数
 export function createValidateMethod ({
     target,
     rulesList,
-    successCb,
-    failCb
-}: ValidatorOptions) {
-    return async (options?: { successCallback?: SuccessCallback, failureCallback?: FailureCallback }) => {
+    success,
+    fail
+}: Validation.ValidateMethodCreatorParams) {
+    return async (options?: {
+        successCallback?: Validation.SuccessCallback,
+        failureCallback?: Validation.FailureCallback
+    }) => {
         const validatedErrorMessage = await validate(unref(target), rulesList)
         if (validatedErrorMessage) {
-            failCb(validatedErrorMessage as string)
-            return options?.failureCallback && options.failureCallback(validatedErrorMessage as string)
+            fail(validatedErrorMessage as string)
+            options?.failureCallback && options.failureCallback(validatedErrorMessage as string)
+            return
         }
-        successCb()
+        success()
         options?.successCallback && options.successCallback()
     }
 }

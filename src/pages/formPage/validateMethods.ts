@@ -31,17 +31,16 @@ function setFormFieldFail (fieldName: string, message: string) {
     })
 }
 
-
 function createValidateFormFieldMethod (fieldName: string, rulesList: SchemaRuleType[]) {
     const [errorFn, passFn] = formTotalValidator.createFieldController(fieldName)
     return createValidateMethod({
         target: toRef(formData, fieldName),
         rulesList,
-        successCb () {
+        success () {
             setFormFieldSuccess(fieldName)
             passFn()
         },
-        failCb (message) {
+        fail (message) {
             setFormFieldFail(fieldName, message)
             errorFn()
         }
