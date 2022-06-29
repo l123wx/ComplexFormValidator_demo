@@ -44,6 +44,11 @@ export const createFormValidator: Validation.FormValidator = (_fieldsMap, { succ
             validate()
         },
 
+        addFields (_fieldsMap) {
+            Object.keys(_fieldsMap).forEach(field => Reflect.set(fieldsMap, field, _fieldsMap[field]))
+            validate()
+        },
+
         updateField (field, value) {
             Reflect.set(fieldsMap, field, value)
             validate()
@@ -51,6 +56,11 @@ export const createFormValidator: Validation.FormValidator = (_fieldsMap, { succ
 
         removeField (field) {
             delete fieldsMap[field]
+            validate()
+        },
+
+        removeFields (fieldsList) {
+            fieldsList.forEach(field => delete fieldsMap[field])
             validate()
         },
 
@@ -73,13 +83,14 @@ export function createValidateMethod ({
         successCallback?: Validation.SuccessCallback,
         failureCallback?: Validation.FailureCallback
     }) => {
-        const validatedErrorMessage = await validate(unref(target), rulesList)
+        const value = unref(target)
+        const validatedErrorMessage = await validate(value, rulesList)
         if (validatedErrorMessage) {
             fail(validatedErrorMessage as string)
             options?.failureCallback && options.failureCallback(validatedErrorMessage as string)
             return
         }
-        success()
-        options?.successCallback && options.successCallback()
+        success(value)
+        options?.successCallback && options.successCallback(value)
     }
 }

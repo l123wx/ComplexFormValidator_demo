@@ -1,5 +1,5 @@
 declare namespace Validation {
-    type SuccessCallback = () => void
+    type SuccessCallback = (value: any) => void
     type FailureCallback = (errorMessage: string) => void
 
     type OptionCallback = () => void | Promise<any>
@@ -9,9 +9,11 @@ declare namespace Validation {
     interface FormValidatorCallback<T extends string> {
         validate: () => void
         addField: (field: T, value?: boolean) => void
+        addFields: (fields: FieldsMap) => void
         hasField: (field: T) => boolean
         updateField: (field: T, value: boolean) => void
         removeField: (field: T) => void
+        removeFields: (fieldsList: T[]) => void
         createFieldController: (field: T) => [
             () => void,
             () => void
