@@ -6,28 +6,28 @@ type Callback = (error?: string) => void
 
 // 是否是数字
 function isNumber (value: any, callback: Callback) {
-    if (!isWeakNumber(value)) {
+    if (value && !isWeakNumber(value)) {
         return callback('must_number')
     }
     callback()
 }
 // 是否是正整形
 function isInteger (value: any, callback: Callback) {
-    if (!isWeakInteger(value)) {
+    if (value && !isWeakInteger(value)) {
         return callback('must_integer')
     }
     callback()
 }
 // 是否 > 0
 function bigNumberIsGreaterThanZero (value: any, callback: Callback) {
-    if (new BigNumber(value).isGreaterThan(0)) {
+    if (value && new BigNumber(value).isGreaterThan(0)) {
         return callback()
     }
     callback('must_greaterThan_zero')
 }
 // 是否 >= 0
 function bigNumberIsGreaterThanOrEqualToZero (value: any, callback: Callback) {
-    if (new BigNumber(value).isGreaterThanOrEqualTo(0)) {
+    if (value && new BigNumber(value).isGreaterThanOrEqualTo(0)) {
         return callback()
     }
     callback('not_lessThan_zero')
