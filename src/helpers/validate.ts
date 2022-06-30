@@ -83,7 +83,8 @@ export function createValidateMethod ({
         successCallback?: Validation.SuccessCallback,
         failureCallback?: Validation.FailureCallback
     }) => {
-        const value = unref(target)
+        // 加上undefined是为了解决 空字符串无法经过某些规则校验 导致 非必填项触发错误校验的问题
+        const value = unref(target) || undefined
         const validatedErrorMessage = await validate(value, rulesList)
         if (validatedErrorMessage) {
             fail(validatedErrorMessage as string)
