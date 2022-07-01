@@ -29,44 +29,41 @@ export const createFormValidator: Validation.FormValidator = (_fieldsMap, { succ
         const fieldValuesList = Object.values(fieldsMap)
         const isValidateSuccess = fieldValuesList.findIndex(fieldValue => !fieldValue) === -1
         const callback = isValidateSuccess ? success : fail
-        callback && isFunction(callback) && callback()
+        if (callback && isFunction(callback)) {
+            callback()
+        }
     }
 
     return {
         validate,
 
         hasField (field: string) {
-            return fieldsMap[field] !== undefined
+            return Reflect.has(fieldsMap, field)
         },
 
-        addField (field, value = false) {
+        putField (field, value = false) {
             Reflect.set(fieldsMap, field, value)
             validate()
         },
 
-        addFields (_fieldsMap) {
+        putFields (_fieldsMap) {
             Object.keys(_fieldsMap).forEach(field => Reflect.set(fieldsMap, field, _fieldsMap[field]))
             validate()
         },
 
-        updateField (field, value) {
-            Reflect.set(fieldsMap, field, value)
-            validate()
-        },
-
         removeField (field) {
-            delete fieldsMap[field]
+            Reflect.deleteProperty(fieldsMap, field)
             validate()
         },
 
         removeFields (fieldsList) {
-            fieldsList.forEach(field => delete fieldsMap[field])
+            fieldsList.forEach(field => Reflect.deleteProperty(fieldsMap, field))
             validate()
         },
 
         createFieldController (field) {
-            const errorFn = () => this.updateField(field, false)
-            const passFn = () => this.updateField(field, true)
+            const errorFn = () => this.putField(field, false)
+            const passFn = () => this.putField(field, true)
             return [errorFn, passFn]
         }
     }

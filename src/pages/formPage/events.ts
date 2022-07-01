@@ -31,7 +31,7 @@ export function onPreBnbBlur () {
 export function onOptionalValueSwiperChange (newVal: any) {
     isOptionalValueShow.value = newVal as boolean
     if (newVal) {
-        formTotalValidator.addField('optionalValue', false)
+        formTotalValidator.putField('optionalValue', false)
     } else {
         formTotalValidator.removeField('optionalValue')
     }

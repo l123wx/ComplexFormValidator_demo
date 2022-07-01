@@ -8,10 +8,9 @@ declare namespace Validation {
 
     interface FormValidatorCallback<T extends string> {
         validate: () => void
-        addField: (field: T, value?: boolean) => void
-        addFields: (fields: FieldsMap) => void
         hasField: (field: T) => boolean
-        updateField: (field: T, value: boolean) => void
+        putField: (field: T, value?: boolean) => void
+        putFields: (fields: FieldsMap) => void
         removeField: (field: T) => void
         removeFields: (fieldsList: T[]) => void
         createFieldController: (field: T) => [
